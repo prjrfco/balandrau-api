@@ -14,13 +14,6 @@ export class CreateTableLoja1695655592481 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           { name: 'nome', type: 'varchar' },
-          { name: 'numero', type: 'integer', isNullable: true },
-          { name: 'dia_reuniao', type: 'varchar', isNullable: true },
-          { name: 'horario_reuniao', type: 'varchar', isNullable: true },
-          { name: 'titulo', type: 'varchar', isNullable: true },
-          { name: 'titulo_sigla', type: 'varchar', isNullable: true },
-          { name: 'cod_potencia', type: 'integer', isNullable: true },
-          { name: 'dt_fundacao', type: 'date', isNullable: true },
           { name: 'ativo', type: 'boolean', default: true },
           {
             name: 'apagado',

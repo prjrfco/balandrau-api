@@ -14,9 +14,7 @@ export class CreateTableCargo1695668130979 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           { name: 'nome', type: 'varchar' },
-          { name: 'descricao', type: 'varchar', isNullable: true },
           { name: 'brasao', type: 'varchar', isNullable: true },
-          { name: 'ordem', type: 'integer', isNullable: false, default: 1000 },
           { name: 'ativo', type: 'boolean', default: true },
           {
             name: 'apagado',

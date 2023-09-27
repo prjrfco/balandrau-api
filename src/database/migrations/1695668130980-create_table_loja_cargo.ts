@@ -1,23 +1,31 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateTableCargo1695668130979 implements MigrationInterface {
+export class CreateTableLojaCargo1695668130980 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
         name: 'loja_cargo',
         columns: [
           {
-            name: 'loja_id',
+            name: 'id',
             type: 'int',
             isPrimary: true,
+            isGenerated: true,
+            generationStrategy: 'increment',
+          },
+          {
+            name: 'loja_id',
+            type: 'int',
+            isPrimary: false,
             isGenerated: false,
           },
           {
             name: 'cargo_id',
             type: 'int',
-            isPrimary: true,
+            isPrimary: false,
             isGenerated: false,
           },
+          { name: 'ordem', type: 'integer', isNullable: false, default: 1000 },
         ],
         foreignKeys: [
           {
@@ -40,11 +48,15 @@ export class CreateTableCargo1695668130979 implements MigrationInterface {
       }),
       true,
     );
+    await queryRunner.query(
+      `CREATE UNIQUE INDEX "loja_cargo_unique" ON loja_cargo(loja_id, cargo_id)`,
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('loja_cargo', 'loja_cargo_fk');
+    await queryRunner.query(`DROP INDEX IF EXISTS "loja_cargo_unique"`);
     await queryRunner.dropForeignKey('loja_cargo', 'cargo_loja_fk');
+    await queryRunner.dropForeignKey('loja_cargo', 'loja_cargo_fk');
     await queryRunner.dropTable('cargo');
   }
 }

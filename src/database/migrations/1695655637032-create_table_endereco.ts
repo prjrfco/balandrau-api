@@ -1,10 +1,10 @@
 import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
-export class CreateTableNominata1695668139588 implements MigrationInterface {
+export class CreateTableEndereco1695655637032 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.createTable(
       new Table({
-        name: 'nominata',
+        name: 'endereco',
         columns: [
           {
             name: 'id',
@@ -14,18 +14,19 @@ export class CreateTableNominata1695668139588 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'irmao_id',
+            name: 'pesssoa_id',
             type: 'int',
             isNullable: false,
+            isUnique: true,
           },
-          {
-            name: 'loja_cargo_id',
-            type: 'int',
-            isNullable: false,
-          },
-          { name: 'periodo', type: 'varchar', isUnique: true },
-          { name: 'dt_inicio', type: 'date', isNullable: true },
-          { name: 'dt_fim', type: 'date', isNullable: true },
+          { name: 'cep', type: 'varchar' },
+          { name: 'logradouro', type: 'varchar' },
+          { name: 'numero', type: 'varchar' },
+          { name: 'complemento', type: 'varchar' },
+          { name: 'bairro', type: 'varchar' },
+          { name: 'cidade', type: 'varchar' },
+          { name: 'estado', type: 'varchar' },
+          { name: 'descricao', type: 'varchar' },
           { name: 'ativo', type: 'boolean', default: true },
           {
             name: 'apagado',
@@ -47,12 +48,10 @@ export class CreateTableNominata1695668139588 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            name: 'loja_nominata_fk',
-            referencedTableName: 'loja',
+            name: 'pessoa_endereco_fk',
+            referencedTableName: 'pessoa',
             referencedColumnNames: ['id'],
-            columnNames: ['loja_id'],
-            onDelete: 'SET NULL',
-            onUpdate: 'CASCADE',
+            columnNames: ['pessoa_id'],
           },
         ],
       }),
@@ -61,7 +60,7 @@ export class CreateTableNominata1695668139588 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('nominata', 'loja_nominata_fk');
-    await queryRunner.dropTable('nominata');
+    await queryRunner.dropForeignKey('endereco', 'pessoa_endereco_fk');
+    await queryRunner.dropTable('endereco');
   }
 }

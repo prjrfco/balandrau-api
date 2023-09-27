@@ -18,7 +18,7 @@ export const databaseProviders = [
         migrationsRun: true,
         migrationsTransactionMode: 'all',
         synchronize: false,
-        logging: false,
+        logging: true,
       }).initialize();
     },
   },

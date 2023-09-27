@@ -14,25 +14,15 @@ export class CreateTableIrmao1695655637031 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'loja_id',
-            type: 'int',
-            isNullable: false,
-          },
-          {
             name: 'pesssoa_id',
             type: 'int',
             isNullable: false,
             isUnique: true,
           },
+          { name: 'loja_simbolica', type: 'varchar' },
           { name: 'cim', type: 'varchar', isUnique: true },
           { name: 'situacao', type: 'varchar' },
-          { name: 'situacao_glomam', type: 'varchar' },
-          { name: 'dt_iniciacao', type: 'date', isNullable: true },
-          { name: 'dt_elevacao', type: 'date', isNullable: true },
-          { name: 'dt_exaltacao', type: 'date', isNullable: true },
           { name: 'dt_falecimento', type: 'date', isNullable: true },
-          { name: 'nome_esposa', type: 'varchar', isNullable: true },
-          { name: 'dt_nascimento_esposa', type: 'varchar', isNullable: true },
           { name: 'ativo', type: 'boolean', default: true },
           {
             name: 'apagado',
@@ -54,14 +44,6 @@ export class CreateTableIrmao1695655637031 implements MigrationInterface {
         ],
         foreignKeys: [
           {
-            name: 'loja_irmao_fk',
-            referencedTableName: 'loja',
-            referencedColumnNames: ['id'],
-            columnNames: ['loja_id'],
-            onDelete: 'SET NULL',
-            onUpdate: 'CASCADE',
-          },
-          {
             name: 'pessoa_irmao_fk',
             referencedTableName: 'pessoa',
             referencedColumnNames: ['id'],
@@ -76,7 +58,6 @@ export class CreateTableIrmao1695655637031 implements MigrationInterface {
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.dropForeignKey('irmao', 'loja_irmao_fk');
     await queryRunner.dropForeignKey('irmao', 'pessoa_irmao_fk');
     await queryRunner.dropTable('irmao');
   }

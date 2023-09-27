@@ -57,7 +57,7 @@ export class CreateTableEvolucao1695668111919 implements MigrationInterface {
             referencedTableName: 'grau',
             referencedColumnNames: ['id'],
             columnNames: ['grau_id'],
-            onDelete: 'SET NULL',
+            onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
           },
         ],
