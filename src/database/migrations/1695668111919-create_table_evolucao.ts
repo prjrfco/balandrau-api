@@ -30,10 +30,23 @@ export class CreateTableEvolucao1695668111919 implements MigrationInterface {
             type: 'boolean',
             default: false,
           },
-          { name: 'criado_em', type: 'timestamp', default: 'now()' },
-          { name: 'modificado_em', type: 'timestamp' },
-          { name: 'criado_por', type: 'varchar' },
-          { name: 'modificado_por', type: 'varchar' },
+          {
+            name: 'deleted_at',
+            type: 'datetimeoffset',
+            default: null,
+            isNullable: true,
+          },
+          {
+            name: 'created_at',
+            type: 'datetimeoffset',
+            default: 'CURRENT_TIMESTAMP',
+          },
+          {
+            name: 'updated_at',
+            type: 'datetimeoffset',
+            default: 'CURRENT_TIMESTAMP',
+            onUpdate: 'CURRENT_TIMESTAMP',
+          },
           {
             name: 'uuid',
             type: 'uuid',
