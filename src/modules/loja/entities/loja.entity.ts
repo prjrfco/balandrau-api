@@ -3,33 +3,27 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Grau } from '../../grau/entities/grau.entity';
-import { Loja } from "../../loja/entities/loja.entity";
+import { Inspetoria } from '../../inspetoria/entities/inspetoria.entity';
 
-@Entity({ name: 'inspetoria' })
-export class Inspetoria {
+@Entity({ name: 'loja' })
+export class Loja {
   @PrimaryGeneratedColumn('increment', { name: 'id' })
   id: number;
 
   @Column({ name: 'nome', nullable: false })
   nome: string;
 
-  @Column({ name: 'apelido', nullable: true })
-  sigla: string;
-
-  @OneToMany(() => Grau, (grau: Grau) => grau.inspetoria, {
-    cascade: true,
+  @ManyToOne(() => Inspetoria, (inspetoria) => inspetoria.id, {
+    orphanedRowAction: 'soft-delete',
+    cascade: false,
   })
-  graus: Grau[];
-
-  @OneToMany(() => Loja, (loja: Loja) => loja.inspetoria, {
-    cascade: true,
-  })
-  lojas: Loja[];
+  @JoinColumn({ name: 'inspetoria_id' })
+  inspetoria: Inspetoria;
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
