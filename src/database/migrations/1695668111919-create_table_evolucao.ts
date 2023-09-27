@@ -32,18 +32,18 @@ export class CreateTableEvolucao1695668111919 implements MigrationInterface {
           },
           {
             name: 'deleted_at',
-            type: 'datetimeoffset',
+            type: 'timestamp',
             default: null,
             isNullable: true,
           },
           {
             name: 'created_at',
-            type: 'datetimeoffset',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
           },
           {
             name: 'updated_at',
-            type: 'datetimeoffset',
+            type: 'timestamp',
             default: 'CURRENT_TIMESTAMP',
             onUpdate: 'CURRENT_TIMESTAMP',
           },

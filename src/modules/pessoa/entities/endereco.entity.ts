@@ -41,6 +41,7 @@ export class Endereco {
 
   @ManyToOne(() => Pessoa, (pessoa) => pessoa.id, {
     orphanedRowAction: 'soft-delete',
+    cascade: false,
   })
   @JoinColumn({ name: 'pessoa_id' })
   pessoa: Pessoa;

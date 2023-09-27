@@ -71,7 +71,7 @@ export class Pessoa {
   religiao: string;
 
   @OneToOne(() => Irmao, (irmao: Irmao) => irmao.pessoa, {
-    cascade: true,
+    cascade: false,
   })
   irmao: Irmao;
 
