@@ -4,11 +4,14 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Inspetoria } from '../../inspetoria/entities/inspetoria.entity';
+import { Cargo } from '../../cargo/entities/cargo.entity';
 
 @Entity({ name: 'loja' })
 export class Loja {
@@ -24,6 +27,24 @@ export class Loja {
   })
   @JoinColumn({ name: 'inspetoria_id' })
   inspetoria: Inspetoria;
+
+  @JoinTable({
+    name: 'loja_cargo',
+    joinColumn: {
+      name: 'loja_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'cargo_id',
+      referencedColumnName: 'id',
+    },
+  })
+  @ManyToMany(() => Cargo, (cargo: Cargo) => cargo.lojas, {
+    cascade: false,
+    onUpdate: 'NO ACTION',
+    onDelete: 'NO ACTION',
+  })
+  cargos: Cargo[];
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
