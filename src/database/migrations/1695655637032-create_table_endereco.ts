@@ -14,7 +14,7 @@ export class CreateTableEndereco1695655637032 implements MigrationInterface {
             generationStrategy: 'increment',
           },
           {
-            name: 'pesssoa_id',
+            name: 'pessoa_id',
             type: 'int',
             isNullable: false,
             isUnique: true,

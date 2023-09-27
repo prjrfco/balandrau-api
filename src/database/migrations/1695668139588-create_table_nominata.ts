@@ -48,10 +48,10 @@ export class CreateTableNominata1695668139588 implements MigrationInterface {
         foreignKeys: [
           {
             name: 'loja_nominata_fk',
-            referencedTableName: 'loja',
+            referencedTableName: 'loja_cargo',
             referencedColumnNames: ['id'],
-            columnNames: ['loja_id'],
-            onDelete: 'SET NULL',
+            columnNames: ['loja_cargo_id'],
+            onDelete: 'CASCADE',
             onUpdate: 'CASCADE',
           },
         ],
