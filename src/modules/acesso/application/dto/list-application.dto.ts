@@ -1,4 +1,4 @@
-import { ListAppGroup_ApplicationDto } from "../../application_group/dto/list-applicantion_gropup_application.dto";
+import { ListAppGroup_ApplicationDto } from '../../application_group/dto/list-applicantion_gropup_application.dto';
 
 export class ListApplicationDto {
   name: string;

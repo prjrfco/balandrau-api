@@ -1,12 +1,12 @@
-import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import { GroupService } from "../modules/group/group.service";
-import { UsersService } from "../modules/users/users.service";
-import { RoleService } from "../modules/permissions/roles.service";
-import { Role } from "../enums/role.enum";
-import { ROLES_KEY } from "../decorators/role.decorator";
-import { GroupsEntity } from "../modules/group/entities/group.entity";
-import { RoleEntity } from "../modules/permissions/entities/roles.entity";
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Role } from '../enums/role.enum';
+import { ROLES_KEY } from '../decorators/role.decorator';
+import { GroupService } from '../modules/acesso/group/group.service';
+import { UsersService } from '../modules/acesso/users/users.service';
+import { RoleService } from '../modules/acesso/permissions/roles.service';
+import { GroupsEntity } from '../modules/acesso/group/entities/group.entity';
+import { RoleEntity } from '../modules/acesso/permissions/entities/roles.entity';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -14,7 +14,7 @@ export class RoleGuard implements CanActivate {
     private readonly reflector: Reflector,
     private readonly groupService: GroupService,
     private readonly usersService: UsersService,
-    private readonly roleService: RoleService
+    private readonly roleService: RoleService,
   ) {}
 
   async canActivate(context: ExecutionContext) {
@@ -28,7 +28,9 @@ export class RoleGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-    const userGroup: GroupsEntity[] = await this.getGroupsByUser(request.user.id);
+    const userGroup: GroupsEntity[] = await this.getGroupsByUser(
+      request.user.id,
+    );
 
     const groupRoles = await this.getRolesForGroup(userGroup);
 
