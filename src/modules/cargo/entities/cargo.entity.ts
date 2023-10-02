@@ -3,11 +3,12 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Loja } from '../../loja/entities/loja.entity';
+import { LojaCargo } from '../../loja-cargo/entities/loja-cargo.entity';
 
 @Entity({ name: 'cargo' })
 export class Cargo {
@@ -20,10 +21,8 @@ export class Cargo {
   @Column({ name: 'apelido', nullable: true })
   brasao: string;
 
-  @ManyToMany(() => Loja, (loja: Loja) => loja.cargos, {
-    cascade: false,
-    onUpdate: 'NO ACTION',
-    onDelete: 'NO ACTION',
+  @OneToMany(() => LojaCargo, (lojaCargo: LojaCargo) => lojaCargo.cargo, {
+    cascade: true,
   })
   lojas: Loja[];
 

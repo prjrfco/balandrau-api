@@ -6,12 +6,14 @@ import {
   JoinColumn,
   JoinTable,
   ManyToMany,
-  ManyToOne,
+  ManyToOne, OneToMany,
   PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+  UpdateDateColumn
+} from "typeorm";
 import { Inspetoria } from '../../inspetoria/entities/inspetoria.entity';
 import { Cargo } from '../../cargo/entities/cargo.entity';
+import { Endereco } from "../../pessoa/entities/endereco.entity";
+import { LojaCargo } from "../../loja-cargo/entities/loja-cargo.entity";
 
 @Entity({ name: 'loja' })
 export class Loja {
@@ -22,29 +24,15 @@ export class Loja {
   nome: string;
 
   @ManyToOne(() => Inspetoria, (inspetoria) => inspetoria.id, {
-    orphanedRowAction: 'soft-delete',
     cascade: false,
   })
   @JoinColumn({ name: 'inspetoria_id' })
   inspetoria: Inspetoria;
 
-  @JoinTable({
-    name: 'loja_cargo',
-    joinColumn: {
-      name: 'loja_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'cargo_id',
-      referencedColumnName: 'id',
-    },
+  @OneToMany(() => LojaCargo, (lojaCargo: LojaCargo) => lojaCargo.loja, {
+    cascade: true,
   })
-  @ManyToMany(() => Cargo, (cargo: Cargo) => cargo.lojas, {
-    cascade: false,
-    onUpdate: 'NO ACTION',
-    onDelete: 'NO ACTION',
-  })
-  cargos: Cargo[];
+  cargos: LojaCargo[];
 
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Date;
