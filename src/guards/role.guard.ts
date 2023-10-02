@@ -3,10 +3,10 @@ import { Reflector } from '@nestjs/core';
 import { Role } from '../enums/role.enum';
 import { ROLES_KEY } from '../decorators/role.decorator';
 import { GroupService } from '../modules/acesso/group/group.service';
-import { UsersService } from '../modules/acesso/users/users.service';
-import { RoleService } from '../modules/acesso/permissions/roles.service';
 import { GroupsEntity } from '../modules/acesso/group/entities/group.entity';
-import { RoleEntity } from '../modules/acesso/permissions/entities/roles.entity';
+import { RoleService } from '../modules/acesso/role/role.service';
+import { UsersService } from '../modules/acesso/user/user.service';
+import { RoleEntity } from '../modules/acesso/role/entities/role.entity';
 
 @Injectable()
 export class RoleGuard implements CanActivate {
@@ -42,8 +42,7 @@ export class RoleGuard implements CanActivate {
 
   async getRolesForGroup(groups: GroupsEntity[]): Promise<RoleEntity[]> {
     if (groups.some((e) => e.admin)) {
-      const result = await this.roleService.findAll();
-      return result;
+      return await this.roleService.findAll();
     } else {
       const findGroups = await this.groupService.findGroupsAndRelations(groups);
       const roles: RoleEntity[] = [];

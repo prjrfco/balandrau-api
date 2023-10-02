@@ -141,4 +141,16 @@ export class UsersService {
       throw new NotFoundException(`Usuário ${id} não existe`);
     }
   }
+
+  async findGroupsByUserUuid(id: string): Promise<GroupsEntity[]> {
+    const user = await this.usersRepository.findOne({
+      where: {
+        id,
+      },
+      relations: {
+        groups: true,
+      },
+    });
+    return user.groups;
+  }
 }
