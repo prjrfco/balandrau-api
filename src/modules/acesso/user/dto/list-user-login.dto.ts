@@ -1,4 +1,4 @@
-import { ListGroupLoginDto } from "../../group/dto/list-group-login.dto";
+import { ListGroupLoginDto } from '../../group/dto/list-group-login.dto';
 
 export class ListUserLoginDto {
   id: string;
@@ -6,7 +6,7 @@ export class ListUserLoginDto {
   email: string;
   groups: ListGroupLoginDto[];
 
-  constructor(id, name, email, groups) {
+  constructor(id: string, name: string, email: string, groups: string) {
     this.id = id;
     this.name = name;
     this.email = email;

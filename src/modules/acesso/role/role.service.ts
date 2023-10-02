@@ -1,19 +1,24 @@
-import { ConflictException, Inject, Injectable, NotAcceptableException } from "@nestjs/common";
-import { Repository } from "typeorm";
-import { CreateRoleDto } from "./dto/create-role.dto";
-import { UpdateRoleDto } from "./dto/update-role.dto";
-import { RoleEntity } from "./entities/roles.entity";
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotAcceptableException,
+} from '@nestjs/common';
+import { Repository } from 'typeorm';
+import { CreateRoleDto } from './dto/create-role.dto';
+import { UpdateRoleDto } from './dto/update-role.dto';
+import { RoleEntity } from './entities/role.entity';
 
 @Injectable()
 export class RoleService {
   constructor(
-    @Inject("ROLE_REPOSITORY")
-    private roleRepository: Repository<RoleEntity>
+    @Inject('ROLE_REPOSITORY')
+    private roleRepository: Repository<RoleEntity>,
   ) {}
 
   async findAll() {
     return await this.roleRepository.find({
-      select: ["id", "name"],
+      select: ['id', 'name'],
     });
   }
 
@@ -22,31 +27,23 @@ export class RoleService {
       where: { id: id },
     });
     if (!role) {
-      throw new NotAcceptableException("Regra não existe");
+      throw new NotAcceptableException('Regra não existe');
     }
     return role;
   }
 
   async findByPermission(name: string) {
-    const permission = await this.roleRepository.findOne({
+    return await this.roleRepository.findOne({
       where: { name },
     });
-    return permission;
   }
-
-  // async findByValue(value: number) {
-  //   const codigo = await this.roleRepository.findOne({
-  //     where: { value },
-  //   });
-  //   return codigo;
-  // }
 
   async create(data: CreateRoleDto) {
     const permission = this.roleRepository.create(data);
 
     const buscaPermission = await this.findByPermission(permission.name);
     if (buscaPermission) {
-      throw new ConflictException("Regra já cadastrada!");
+      throw new ConflictException('Regra já cadastrada!');
     }
 
     return await this.roleRepository.save(permission);
@@ -63,7 +60,7 @@ export class RoleService {
       where: { id: id },
     });
     if (!permission) {
-      throw new NotAcceptableException("Regra não existe");
+      throw new NotAcceptableException('Regra não existe');
     }
     return this.roleRepository.remove(permission);
   }

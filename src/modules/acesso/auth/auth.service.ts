@@ -1,13 +1,17 @@
-import { BadRequestException, Inject, Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { AuthRegisterDto } from "./dto/auth-register.dto";
-import * as bcrypt from "bcrypt";
-import { Repository } from "typeorm";
-import { UsersService } from "../users/users.service";
-import { RoleService } from "../permissions/roles.service";
-import { PessoaService } from "../pessoa/pessoa.service";
-import { UsersEntity } from "../users/entities/users.entity";
-import { ListGroupJwtDto } from "../group/dto/list-group-jwt.dto";
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { AuthRegisterDto } from './dto/auth-register.dto';
+import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
+import { UsersService } from '../user/user.service';
+import { RoleService } from '../role/role.service';
+import { UserEntity } from '../user/entities/user.entity';
+import { ListGroupJwtDto } from '../group/dto/list-group-jwt.dto';
 
 @Injectable()
 export class AuthService {
@@ -15,13 +19,14 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly userService: UsersService,
     private readonly roleService: RoleService,
-    private readonly pessoaService: PessoaService,
-    @Inject("USERS_REPOSITORY")
-    private usersRepository: Repository<UsersEntity>
+    @Inject('USERS_REPOSITORY')
+    private usersRepository: Repository<UserEntity>,
   ) {}
 
-  async createToken(user: UsersEntity) {
-    const groups = user.groups?.map((g) => new ListGroupJwtDto(g.id, g.name, g.role, g.admin));
+  async createToken(user: UserEntity) {
+    const groups = user.groups?.map(
+      (g) => new ListGroupJwtDto(g.id, g.name, g.role, g.admin),
+    );
 
     let roles = [];
     if (groups.some((e) => e.admin)) {
@@ -35,8 +40,6 @@ export class AuthService {
     // console.log(roles);
     const tenantList = user.groups?.map((g) => g.tenant);
 
-    const pessoa = await this.pessoaService.buscarId(user.id);
-
     return {
       accessToken: this.jwtService.sign(
         {
@@ -44,18 +47,16 @@ export class AuthService {
           name: user.name,
           email: user.email,
           roles: [...new Set(roles)],
-          tenant: tenantList.length > 0 ? tenantList[0].id : "",
-          pessoa: pessoa,
-          grupo: user.groups.map((r) => r.name),
+          tenant: tenantList.length > 0 ? tenantList[0].id : '',
           // application: '5b9c05ce-5c2b-48f5-9281-2429682c4f35',
         },
 
         {
-          expiresIn: "7 days",
+          expiresIn: '7 days',
           subject: String(user.id),
-          issuer: "login",
-          audience: "access",
-        }
+          issuer: 'login',
+          audience: 'access',
+        },
       ),
     };
   }
@@ -63,8 +64,8 @@ export class AuthService {
   checkToken(token: string) {
     try {
       return this.jwtService.verify(token, {
-        audience: "access",
-        issuer: "login",
+        audience: 'access',
+        issuer: 'login',
       });
     } catch (e) {
       throw new BadRequestException(e);
@@ -81,9 +82,9 @@ export class AuthService {
   }
 
   getTenant(token: string) {
-    const payload = this.jwtService.decode(token.split(" ")[1]);
+    const payload = this.jwtService.decode(token.split(' ')[1]);
 
-    return payload["tenant"];
+    return payload['tenant'];
   }
 
   async login(email: string, password: string) {
@@ -98,10 +99,10 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException("Email e/ou senha incorretos.");
+      throw new UnauthorizedException('Email e/ou senha incorretos.');
     }
     if (!(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException("Email e/ou senha incorretos.");
+      throw new UnauthorizedException('Email e/ou senha incorretos.');
     }
 
     return this.createToken(user);
@@ -112,19 +113,19 @@ export class AuthService {
       email,
     });
     if (!user) {
-      throw new UnauthorizedException("Email está incorreto");
+      throw new UnauthorizedException('Email está incorreto');
     }
 
-    const token = this.jwtService.sign(
+    this.jwtService.sign(
       {
         id: user.id,
       },
       {
-        expiresIn: "30 minutes",
+        expiresIn: '30 minutes',
         subject: String(user.id),
-        issuer: "forget",
-        audience: "users",
-      }
+        issuer: 'forget',
+        audience: 'users',
+      },
     );
 
     return true;
@@ -133,12 +134,12 @@ export class AuthService {
   async reset(password: string, token: string) {
     try {
       const data: any = this.jwtService.verify(token, {
-        issuer: "forget",
-        audience: "users",
+        issuer: 'forget',
+        audience: 'users',
       });
 
       if (isNaN(Number(data.id))) {
-        throw new BadRequestException("Token é inválido");
+        throw new BadRequestException('Token é inválido');
       }
       const salt = await bcrypt.genSalt();
       password = await bcrypt.hash(password, salt);

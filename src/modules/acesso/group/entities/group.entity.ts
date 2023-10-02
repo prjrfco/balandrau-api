@@ -1,12 +1,20 @@
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Base } from "../../../decorators/base.entity";
-import { UsersEntity } from "../../users/entities/users.entity";
-import { RoleEntity } from "../../permissions/entities/roles.entity";
-import { TenantEntity } from "../../tenant/entities/tenant.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { UserEntity } from '../../user/entities/user.entity';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { TenantEntity } from '../../tenant/entities/tenant.entity';
+import { Base } from '../../../../decorators/base.entity';
 
-@Entity({ name: "group", schema: "acesso" })
+@Entity({ name: 'group', schema: 'acesso' })
 export class GroupsEntity extends Base {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -15,28 +23,32 @@ export class GroupsEntity extends Base {
   @Column()
   admin: boolean;
 
-  @ManyToMany(() => UsersEntity, (usersEntity: UsersEntity) => usersEntity.groups)
-  users: UsersEntity[];
+  @ManyToMany(() => UserEntity, (usersEntity: UserEntity) => usersEntity.groups)
+  users: UserEntity[];
 
   @JoinTable({
-    name: "roles_groups",
-    schema: "acesso",
+    name: 'roles_groups',
+    schema: 'acesso',
     joinColumn: {
-      name: "group_id",
-      referencedColumnName: "id",
+      name: 'group_id',
+      referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: "role_id",
-      referencedColumnName: "id",
+      name: 'role_id',
+      referencedColumnName: 'id',
     },
   })
-  @ManyToMany(() => RoleEntity, (rolesEntity: RoleEntity) => rolesEntity.groups, {
-    cascade: true,
-    nullable: true,
-  })
+  @ManyToMany(
+    () => RoleEntity,
+    (rolesEntity: RoleEntity) => rolesEntity.groups,
+    {
+      cascade: true,
+      nullable: true,
+    },
+  )
   role: RoleEntity[];
 
   @ManyToOne(() => TenantEntity, (tenantEntity) => tenantEntity.groups)
-  @JoinColumn({ name: "tenant_id", referencedColumnName: "id" })
+  @JoinColumn({ name: 'tenant_id', referencedColumnName: 'id' })
   tenant?: TenantEntity;
 }

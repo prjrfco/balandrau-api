@@ -1,49 +1,54 @@
-import { ConflictException, Inject, Injectable, NotAcceptableException, NotFoundException } from "@nestjs/common";
-import { Repository, In } from "typeorm";
-import { ListRoleDto } from "../permissions/dto/list-roles.dto";
-import { RoleEntity } from "../permissions/entities/roles.entity";
-import { CreateGroupDto } from "./dto/create-group.dto";
-import { ListGroupDto } from "./dto/list-group.dto";
-import { UpdateGroupDto } from "./dto/update-group-dto";
-import { GroupsEntity } from "./entities/group.entity";
-import { ListRoleGroupDto } from "../permissions/dto/list-roles-group.dto";
-import { ListFeatureDto } from "../feature/dto/list-feature.dto";
-import { ListGroupFeatureDto } from "./dto/list-group-feature.dto";
-import { AuthService } from "../auth/auth.service";
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
+import { In, Repository } from 'typeorm';
+import { ListRoleDto } from '../role/dto/list-roles.dto';
+import { RoleEntity } from '../role/entities/role.entity';
+import { CreateGroupDto } from './dto/create-group.dto';
+import { ListGroupDto } from './dto/list-group.dto';
+import { UpdateGroupDto } from './dto/update-group-dto';
+import { GroupsEntity } from './entities/group.entity';
+import { ListRoleGroupDto } from '../role/dto/list-roles-group.dto';
+import { ListFeatureDto } from '../feature/dto/list-feature.dto';
+import { ListGroupFeatureDto } from './dto/list-group-feature.dto';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class GroupService {
   constructor(
-    @Inject("GROUP_REPOSITORY")
+    @Inject('GROUP_REPOSITORY')
     private groupsRepository: Repository<GroupsEntity>,
-    @Inject("ROLE_REPOSITORY")
+    @Inject('ROLE_REPOSITORY')
     private rolesRepository: Repository<RoleEntity>,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
   ) {}
 
   async findAll(token: string) {
     const tenant = this.authService.getTenant(token);
 
     const retorno = await this.groupsRepository.find({
-      select: ["id", "name"],
+      select: ['id', 'name'],
       where: { tenant: { id: tenant } },
       relations: { role: true },
     });
 
-    const rolesListDto = retorno.map(
+    return retorno.map(
       (r) =>
         new ListGroupDto(
           r.id,
           r.name,
-          r.role?.map((g) => new ListRoleGroupDto(g.id, g.name))
-        )
+          r.role?.map((g) => new ListRoleGroupDto(g.id, g.name)),
+        ),
     );
-    return rolesListDto;
   }
 
   async findOne(id: string) {
     const group = await this.groupsRepository.findOne({
-      select: ["id", "name"],
+      select: ['id', 'name'],
       where: { id: id },
       relations: {
         role: {
@@ -59,12 +64,15 @@ export class GroupService {
     const features: ListFeatureDto[] = [];
 
     for (const role of group.role) {
-      if (role.feature && features.findIndex((f) => f.id === role.feature.id) === -1) {
+      if (
+        role.feature &&
+        features.findIndex((f) => f.id === role.feature.id) === -1
+      ) {
         const featureDTO: ListFeatureDto = new ListFeatureDto(
           role.feature.id,
           role.feature.name,
           role.feature.description,
-          []
+          [],
         );
         features.push(featureDTO);
       }
@@ -79,22 +87,20 @@ export class GroupService {
         features[indexFeature].roles.push(roleDTO);
       }
     }
-    const listGroupFeature = new ListGroupFeatureDto(group.id, group.name, features);
-
-    return listGroupFeature;
+    return new ListGroupFeatureDto(group.id, group.name, features);
   }
 
   async findByGroup(name: string) {
-    const group = await this.groupsRepository.findOne({ where: { name } });
-
-    return group;
+    return await this.groupsRepository.findOne({ where: { name } });
   }
 
   async create(data: CreateGroupDto, token: string) {
     let role;
 
     if (data.role) {
-      role = await Promise.all(data.role.map((name) => this.preloadRolessEntityByName(name)));
+      role = await Promise.all(
+        data.role.map((name) => this.preloadRolessEntityByName(name)),
+      );
     }
 
     const tenant = this.authService.getTenant(token);
@@ -107,13 +113,17 @@ export class GroupService {
 
     const buscaGroup = await this.findByGroup(group.name);
     if (buscaGroup) {
-      throw new ConflictException("Grupo já cadastrado");
+      throw new ConflictException('Grupo já cadastrado');
     }
     return await this.groupsRepository.save(group);
   }
 
   async update(id: string, data: UpdateGroupDto) {
-    const role = data.role && (await Promise.all(data.role.map((id) => this.preloadRolessEntityByName(id))));
+    const role =
+      data.role &&
+      (await Promise.all(
+        data.role.map((id) => this.preloadRolessEntityByName(id)),
+      ));
     const group = await this.groupsRepository.preload({
       id,
       ...data,
@@ -122,20 +132,12 @@ export class GroupService {
     return await this.groupsRepository.save(group);
   }
 
-  async show(id: string) {
-    await this.exists(id);
-
-    return this.groupsRepository.findOneBy({
-      id,
-    });
-  }
-
   async delete(id: string) {
     const group = await this.groupsRepository.findOne({
       where: { id: id },
     });
     if (!group) {
-      throw new NotAcceptableException("Grupo não existe");
+      throw new NotAcceptableException('Grupo não existe');
     }
     return this.groupsRepository.remove(group);
   }
@@ -150,26 +152,18 @@ export class GroupService {
     return this.rolesRepository.create({ id });
   }
 
-  async findGroupsAndRelations(groups: GroupsEntity[]): Promise<GroupsEntity[]> {
+  async findGroupsAndRelations(
+    groups: GroupsEntity[],
+  ): Promise<GroupsEntity[]> {
     const groupNames = groups.map((group) => group.name);
 
-    const findGroupUser = await this.groupsRepository.find({
+    return await this.groupsRepository.find({
       where: {
         name: In(groupNames),
       },
       relations: {
         role: true,
       },
-    });
-
-    return findGroupUser;
-  }
-
-  async getGroupByUser(id: string) {
-    await this.exists(id);
-
-    return this.groupsRepository.findOneBy({
-      id,
     });
   }
 
@@ -183,20 +177,5 @@ export class GroupService {
     ) {
       throw new NotFoundException(`Grupo ${id} não existe`);
     }
-  }
-
-  async getEmailsByGroup(groupName: string): Promise<string[]> {
-    const group = await this.groupsRepository.findOne({
-      where: { name: groupName },
-      relations: ["users"],
-    });
-
-    if (!group) {
-      throw new NotFoundException(`Grupo ${groupName} não encontrado`);
-    }
-
-    const emails = group.users.filter((user) => user.email).map((user) => user.email);
-
-    return emails;
   }
 }

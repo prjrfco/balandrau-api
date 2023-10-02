@@ -1,11 +1,18 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ApplicationGroupEntity } from "../../application_group/entities/application_groups.entity";
-import { RoleEntity } from "../../permissions/entities/roles.entity";
-import { Base } from "../../../decorators/base.entity";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ApplicationGroupEntity } from '../../application_group/entities/application_groups.entity';
+import { RoleEntity } from '../../role/entities/role.entity';
+import { Base } from '../../../../decorators/base.entity';
 
-@Entity({ name: "feature", schema: "acesso" })
+@Entity({ name: 'feature', schema: 'acesso' })
 export class FeatureEntity extends Base {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -19,7 +26,10 @@ export class FeatureEntity extends Base {
   })
   roles?: RoleEntity[];
 
-  @ManyToOne(() => ApplicationGroupEntity, (applicationGroupEntity) => applicationGroupEntity.features)
-  @JoinColumn({ name: "application_group_id", referencedColumnName: "id" })
+  @ManyToOne(
+    () => ApplicationGroupEntity,
+    (applicationGroupEntity) => applicationGroupEntity.features,
+  )
+  @JoinColumn({ name: 'application_group_id', referencedColumnName: 'id' })
   applicationGroup?: ApplicationGroupEntity;
 }

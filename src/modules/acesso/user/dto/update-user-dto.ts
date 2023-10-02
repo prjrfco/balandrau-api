@@ -1,4 +1,4 @@
-import { IsArray, IsOptional, IsString } from "class-validator";
+import { IsArray, IsOptional, IsString } from 'class-validator';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -10,7 +10,7 @@ export class UpdateUserDto {
   @IsArray()
   @IsString({
     each: true,
-    message: "Uuid de Grupos precisam ser uma string",
+    message: 'Uuid de Grupos precisam ser uma string',
   })
   @IsOptional()
   groups: string[];

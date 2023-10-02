@@ -1,15 +1,14 @@
-import { forwardRef, Module } from "@nestjs/common";
-import { AuthController } from "./auth.controller";
-import { AuthService } from "./auth.service";
-import { DatabaseModule } from "../../database/database.module";
-import { AuthProviders } from "./auth.providers";
-import { JwtModule } from "@nestjs/jwt";
-import { envs } from "../../common/env-values";
-import { PassportModule } from "@nestjs/passport";
-import { JwtStrategy } from "./strategies/jwt.strategy";
-import { UsersService } from "../users/users.service";
-import { RoleService } from "../permissions/roles.service";
-import { PessoaService } from "../pessoa/pessoa.service";
+import { Module } from '@nestjs/common';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { AuthProviders } from './auth.providers';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { UsersService } from '../user/user.service';
+import { RoleService } from '../role/role.service';
+import { DatabaseModule } from '../../../database/database.module';
+import { envs } from '../../../common/env-values';
 
 @Module({
   imports: [
@@ -20,7 +19,13 @@ import { PessoaService } from "../pessoa/pessoa.service";
     }),
   ],
   controllers: [AuthController],
-  providers: [...AuthProviders, JwtStrategy, AuthService, UsersService, RoleService, PessoaService],
+  providers: [
+    ...AuthProviders,
+    JwtStrategy,
+    AuthService,
+    UsersService,
+    RoleService,
+  ],
   exports: [AuthService],
 })
 export class AuthModule {}

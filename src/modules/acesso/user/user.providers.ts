@@ -1,9 +1,9 @@
 import { DataSource } from 'typeorm';
-import { UserEntity } from '../user/entities/user.entity';
+import { UserEntity } from './entities/user.entity';
 import { GroupsEntity } from '../group/entities/group.entity';
 import { RoleEntity } from '../role/entities/role.entity';
 
-export const AuthProviders = [
+export const UsersProviders = [
   {
     provide: 'USERS_REPOSITORY',
     useFactory: (dataSource: DataSource) =>

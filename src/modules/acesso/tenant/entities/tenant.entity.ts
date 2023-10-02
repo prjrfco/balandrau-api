@@ -1,10 +1,10 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Base } from "../../../decorators/base.entity";
-import { GroupsEntity } from "../../group/entities/group.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { GroupsEntity } from '../../group/entities/group.entity';
+import { Base } from '../../../../decorators/base.entity';
 
-@Entity({ name: "tenant", schema: "acesso" })
+@Entity({ name: 'tenant', schema: 'acesso' })
 export class TenantEntity extends Base {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({ nullable: true })

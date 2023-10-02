@@ -1,4 +1,4 @@
-import { ListRoleDto } from "../../permissions/dto/list-roles.dto";
+import { ListRoleDto } from '../../role/dto/list-roles.dto';
 
 export class ListFeatureDto {
   id: string;
@@ -6,7 +6,7 @@ export class ListFeatureDto {
   description: string;
   roles: ListRoleDto[];
 
-  constructor(id, name, description, roles) {
+  constructor(id: string, name: string, description: string, roles: any[]) {
     this.id = id;
     this.name = name;
     this.description = description;

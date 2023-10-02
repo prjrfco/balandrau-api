@@ -1,8 +1,8 @@
-import { Module } from "@nestjs/common";
-import { FeatureController } from "./feature.controller";
-import { FeatureService } from "./feature.service";
-import { DatabaseModule } from "../../database/database.module";
-import { FeatureProviders } from "./feature.providers";
+import { Module } from '@nestjs/common';
+import { FeatureController } from './feature.controller';
+import { FeatureService } from './feature.service';
+import { FeatureProviders } from './feature.providers';
+import { DatabaseModule } from '../../../database/database.module';
 
 @Module({
   imports: [DatabaseModule],

@@ -1,4 +1,4 @@
-import { ListRoleJwtDto } from "../../permissions/dto/list-roles-jwt.dto";
+import { ListRoleJwtDto } from '../../role/dto/list-roles-jwt.dto';
 
 export class ListGroupJwtDto {
   id: string;

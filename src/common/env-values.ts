@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+
 dotenv.config();
 
 export const envs = {
@@ -8,4 +9,5 @@ export const envs = {
   DATABASE_USER: process.env.DATABASE_USER || 'postgres',
   DATABASE_PASSWORD: `${process.env.DATABASE_PASSWORD || 'postgres'}`,
   DATABASE_NAME: process.env.DATABASE_NAME || 'balandrau2',
+  JWT_SECRET: process.env.JWT_SECRET || 'default',
 };
