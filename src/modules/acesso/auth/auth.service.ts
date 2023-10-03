@@ -51,7 +51,7 @@ export class AuthService {
               ? tenantList[0].id
               : '',
         },
-
+        //TODO: VERIFICAR ISSUER E AUDIENCE AO SER EMITIDO UM NOVO TOKEN
         {
           expiresIn: '7 days',
           subject: String(user.id),
@@ -96,7 +96,7 @@ export class AuthService {
           role: true,
           tenant: true,
         },
-      }, // tras a relação de group na construção do token
+      },
     });
 
     if (!user) {
@@ -114,7 +114,7 @@ export class AuthService {
       email,
     });
     if (!user) {
-      throw new UnauthorizedException('Email está incorreto');
+      throw new UnauthorizedException('Email não encontrado');
     }
 
     this.jwtService.sign(
