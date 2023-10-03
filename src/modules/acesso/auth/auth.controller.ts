@@ -5,17 +5,13 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 import { AuthRegisterDto } from './dto/auth-register.dto';
 import { AuthResetDto } from './dto/auth-reset.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { UsersService } from '../user/user.service';
 import { AuthGuard } from '../../../guards/auth.guard';
 import { User } from '../../../decorators/user.decorator';
 
 @Controller('auth')
 @ApiTags('Authentication')
 export class AuthController {
-  constructor(
-    private readonly userService: UsersService,
-    private readonly authService: AuthService,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('login')
   async login(@Body() { email, password }: AuthLoginDto) {

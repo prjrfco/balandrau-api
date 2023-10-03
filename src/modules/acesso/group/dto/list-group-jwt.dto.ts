@@ -6,10 +6,10 @@ export class ListGroupJwtDto {
   admin: boolean;
   role: ListRoleJwtDto[];
 
-  constructor(id, name, role, admin) {
+  constructor(id?: string, name?: string, role?: any[], admin?: boolean) {
     this.id = id;
     this.name = name;
     this.admin = admin;
-    this.role = role.map((r) => new ListRoleJwtDto(r.name));
+    this.role = role?.map((r) => new ListRoleJwtDto(r.name));
   }
 }

@@ -37,7 +37,6 @@ export class AuthService {
       roles = groups.flatMap((g) => g.role.map((r) => r.name));
     }
 
-    // console.log(roles);
     const tenantList = user.groups?.map((g) => g.tenant);
 
     return {
@@ -47,8 +46,10 @@ export class AuthService {
           name: user.name,
           email: user.email,
           roles: [...new Set(roles)],
-          tenant: tenantList.length > 0 ? tenantList[0].id : '',
-          // application: '5b9c05ce-5c2b-48f5-9281-2429682c4f35',
+          tenant:
+            tenantList.length > 0 && tenantList[0] != undefined
+              ? tenantList[0].id
+              : '',
         },
 
         {
@@ -159,29 +160,6 @@ export class AuthService {
   async register(data: AuthRegisterDto) {
     const user = await this.userService.create(data);
 
-    return this.createToken(user[0]);
+    return this.createToken(user);
   }
 }
-
-// async getRolesForGroup(groups: GroupsEntity[]): Promise<RoleEntity[]> {
-//   if (groups.some((e) => e.admin)) {
-//     return await this.roleService.findAll();
-//   } else {
-//     const findGroups = await this.groupService.findGroupsAndRelations(groups);
-//     const roles: RoleEntity[] = [];
-//     for (const group of findGroups) {
-//       roles.push(...group.role);
-//     }
-//     return roles;
-//   }
-// }
-
-// await this.mailer.sendMail({
-//   subject: 'Recuperação de Senha',
-//   to: 'ronny.perera@ipdec.org',
-//   template: 'forget',
-//   context: {
-//     name: user.name,
-//     token,
-//   },
-// });

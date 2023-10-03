@@ -64,7 +64,7 @@ export class UsersService {
   }
 
   async create(data: CreateUserDto) {
-    let groups;
+    let groups: GroupsEntity[];
     if (data.groups) {
       groups = await Promise.all(
         data.groups.map((name) => this.preloadGroupsEntityByName(name)),
